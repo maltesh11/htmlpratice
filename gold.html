@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gold Calculator 22K / 24K</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg,#ffd89b,#19547b);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+        .box{
+            background:white;
+            width:420px;
+            padding:25px;
+            border-radius:10px;
+            box-shadow:0 0 15px rgba(0,0,0,0.3);
+        }
+        h2{ text-align:center; }
+        label{ font-weight:bold; }
+        input, select{
+            width:100%;
+            padding:8px;
+            margin:8px 0 15px 0;
+        }
+        button{
+            width:100%;
+            padding:10px;
+            background:#ff9800;
+            color:white;
+            border:none;
+            font-size:16px;
+            cursor:pointer;
+        }
+        .result{
+            margin-top:15px;
+            background:#f3f3f3;
+            padding:10px;
+            border-radius:8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Gold Price Calculator</h2>
+
+    <label>Karat</label>
+    <select id="karat">
+        <option value="22">22 Karat</option>
+        <option value="24">24 Karat</option>
+    </select>
+
+    <label>Select State / UT</label>
+    <select id="state">
+        <option>Andhra Pradesh</option>
+        <option>Telangana</option>
+        <option>Odisha</option>
+        <option>Delhi</option>
+        <option>Uttar Pradesh</option>
+        <option>Gujarat</option>
+        <option>Rajasthan</option>
+        <option>Uttarakhand</option>
+        <option>Haryana</option>
+        <option>Tamil Nadu</option>
+        <option>Karnataka</option>
+        <option>Kerala</option>
+        <option>Maharashtra</option>
+        <option>Punjab</option>
+        <option>Bihar</option>
+        <option>Madhya Pradesh</option>
+        <option>West Bengal</option>
+        <option>Assam</option>
+        <option>Goa</option>
+        <option>Jharkhand</option>
+        <option>Chhattisgarh</option>
+        <option>Himachal Pradesh</option>
+        <option>Jammu & Kashmir</option>
+        <option>Ladakh</option>
+        <option>Chandigarh</option>
+        <option>Puducherry</option>
+        <option>Dadra & Nagar Haveli</option>
+        <option>Daman & Diu</option>
+        <option>Andaman & Nicobar</option>
+        <option>Lakshadweep</option>
+        <option>Arunachal Pradesh</option>
+        <option>Manipur</option>
+        <option>Meghalaya</option>
+        <option>Mizoram</option>
+        <option>Nagaland</option>
+        <option>Sikkim</option>
+        <option>Tripura</option>
+    </select>
+
+    <label>Gold Rate per Gram (₹)</label>
+    <input type="number" id="rate">
+
+    <label>Weight (grams)</label>
+    <input type="number" id="weight">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result" style="display:none;"></div>
+</div>
+
+<script>
+function getMakingCharge(karat, weight, state){
+    if(karat == "22"){
+        if(weight <= 1.9){
+            return 4;
+        } else {
+            if(["Andhra Pradesh","Telangana","Odisha"].includes(state)){
+                return 2.5;
+            }
+            if(["Delhi","Uttar Pradesh","Gujarat","Rajasthan","Uttarakhand","Haryana"].includes(state)){
+                return 4;
+            }
+            return 2;
+        }
+    }
+
+    if(karat == "24"){
+        if(weight <= 49){
+            return 4;
+        } else if(weight <= 99){
+            return 3;
+        } else {
+            return 2;
+        }
+    }
+}
+
+function calculate(){
+    let karat = document.getElementById("karat").value;
+    let state = document.getElementById("state").value;
+    let rate = parseFloat(document.getElementById("rate").value);
+    let weight = parseFloat(document.getElementById("weight").value);
+
+    if(isNaN(rate) || isNaN(weight)){
+        alert("Enter rate and weight");
+        return;
+    }
+
+    let makingPercent = getMakingCharge(karat, weight, state);
+    let goldPrice = rate * weight;
+    let makingCharge = goldPrice * (makingPercent/100);
+    let subtotal = goldPrice + makingCharge;
+    let gst = subtotal * 0.03;
+    let finalPrice = subtotal + gst;
+
+    document.getElementById("result").style.display="block";
+    document.getElementById("result").innerHTML = `
+        <b>Karat:</b> ${karat}K<br>
+        <b>State:</b> ${state}<br>
+        <b>Making Charge %:</b> ${makingPercent}%<br><br>
+        Gold Price: ₹ ${goldPrice.toFixed(2)}<br>
+        Making Charge: ₹ ${makingCharge.toFixed(2)}<br>
+        GST (3%): ₹ ${gst.toFixed(2)}<br><br>
+        <h3>Final Price: ₹ ${finalPrice.toFixed(2)}</h3>
+    `;
+}
+</script>
+
+</body>
+</html>
